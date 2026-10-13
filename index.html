@@ -13,10 +13,328 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./src/style.css">
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="./src/main.jsx"></script>
+
+    <!-- Header Navigation -->
+    <header class="site-header">
+      <div class="container header-content">
+        
+        <!-- Brand Logo -->
+        <a class="brand" onclick="setCategory('All')">
+          <div class="brand-icon">🎮</div>
+          <div>
+            <div class="brand-title">Nexus<span>Hub</span><span class="badge-unblocked">Unblocked</span></div>
+          </div>
+        </a>
+
+        <!-- Live Search -->
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input
+            type="text"
+            id="searchInput"
+            class="search-input"
+            placeholder="Search unblocked games... (press / to focus)"
+          />
+        </div>
+
+        <!-- Quick Utilities -->
+        <div class="header-actions">
+          <button class="btn-action" onclick="setCategory('Favorites')" title="Saved Games">
+            <span>⭐</span>
+            <span id="favCountText">Saved (0)</span>
+          </button>
+
+          <button class="btn-action" onclick="openModal('cloakModal')" title="Disguise this browser tab">
+            <span>🕶️</span>
+            <span>Tab Cloak</span>
+          </button>
+
+          <button class="btn-action btn-panic" onclick="openModal('panicModal')" title="Emergency Panic Boss Key">
+            <span>🚨</span>
+            <span id="panicBtnText">Panic []]</span>
+          </button>
+
+          <button class="btn-action" onclick="openModal('jsonModal')" title="Inspect and edit games.json">
+            <span>📄</span>
+            <span>games.json</span>
+          </button>
+
+          <button class="btn-action btn-primary" onclick="openModal('addGameModal')">
+            <span>+</span>
+            <span>Add Game</span>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container" style="flex: 1; padding-bottom: 40px;">
+      
+      <!-- Hero Featured Game Banner -->
+      <section id="heroBanner" class="hero-banner" style="display: none;"></section>
+
+      <!-- Category Filter & Sort Toolbar -->
+      <section class="filter-bar">
+        <div class="category-tabs" id="categoryTabs"></div>
+
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 12px; color: var(--text-dim);">Sort:</span>
+          <select id="sortSelect" class="sort-select">
+            <option value="popular">Most Popular</option>
+            <option value="rating">Top Rated</option>
+            <option value="title">Alphabetical (A-Z)</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Search Count Indicator -->
+      <div id="searchCountMsg" style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; display: none;"></div>
+
+      <!-- Games Grid -->
+      <section id="gamesGrid" class="games-grid"></section>
+
+      <!-- Architecture Features Strip -->
+      <section class="features-strip">
+        <div class="feature-item">
+          <div class="feature-icon">⚡</div>
+          <div>
+            <div class="feature-title">Pure HTML, CSS & JavaScript</div>
+            <div>Zero external dependencies or complex build steps. Direct static entry point ready for GitHub Pages.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🛡️</div>
+          <div>
+            <div class="feature-title">Sandboxed Iframe Architecture</div>
+            <div>Every game is stored in a clean JSON format and embedded inside secure, isolated viewports.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🕶️</div>
+          <div>
+            <div class="feature-title">Stealth Cloak & Panic Trigger</div>
+            <div>Disguise tab as Google Classroom in 1 click or press your emergency keybind for immediate exit.</div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Site Footer -->
+    <footer class="site-footer">
+      <div class="container footer-content">
+        <div>
+          <strong>Nexus Unblocked</strong> · Pure HTML/CSS/JS · Standalone Static Entry Point
+        </div>
+        <div style="display: flex; gap: 16px;">
+          <a style="color: var(--text-muted); cursor: pointer;" onclick="openModal('jsonModal')">View games.json</a>
+          <a style="color: #f87171; cursor: pointer;" onclick="resetCatalog()">Reset Catalog</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- Theater Game Player Modal -->
+    <div id="theaterModal" class="modal-overlay">
+      <div id="theaterContainer" class="theater-container">
+        
+        <!-- Top Control Bar -->
+        <div class="theater-topbar">
+          <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+            <span id="theaterEmoji" style="font-size: 26px;">🎮</span>
+            <div style="overflow: hidden;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <h3 id="theaterTitle" style="font-size: 16px; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Game Title</h3>
+                <span id="theaterCat" style="font-size: 11px; color: var(--primary); font-weight: 700;">Arcade</span>
+              </div>
+              <div style="font-size: 11px; color: var(--text-dim); display: flex; gap: 6px;">
+                <span id="theaterRating" style="color: var(--accent-amber);">★ 4.9</span>
+                <span>·</span>
+                <span id="theaterPlays">0 plays</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <button class="btn-action" id="theaterFavBtn" onclick="toggleTheaterFav()">☆ Favorite</button>
+            <button class="btn-action" onclick="reloadGame()" title="Restart Game">🔄 Reload</button>
+            <button class="btn-action" onclick="toggleCinemaMode()" title="Toggle Widescreen Cinema">📺 Cinema</button>
+            <button class="btn-action" onclick="toggleFullscreen()" title="Fullscreen">⛶ Fullscreen</button>
+            <a class="btn-action" id="theaterDirectLink" target="_blank" rel="noopener noreferrer" title="Open Direct Tab">↗ Direct</a>
+            <button class="btn-action btn-panic" onclick="closeTheater()" title="Close Theater (ESC)">✕ Close</button>
+          </div>
+        </div>
+
+        <!-- The Iframe Viewport -->
+        <div id="theaterIframeBox" class="theater-iframe-box">
+          <iframe
+            id="gameIframe"
+            class="theater-iframe"
+            title="Unblocked Game"
+            allow="fullscreen; autoplay; gamepad; keyboard"
+            sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-forms"
+          ></iframe>
+        </div>
+
+        <!-- Game Description & Keybinds -->
+        <div style="background: #0f172a; border: 1px solid var(--border-subtle); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+            <div>
+              <h4 style="font-size: 12px; text-transform: uppercase; font-weight: 800; color: var(--text-dim); margin-bottom: 4px;">About This Game</h4>
+              <p id="theaterDesc" style="font-size: 13px; color: #cbd5e1; line-height: 1.5;"></p>
+              <div id="theaterTags" style="margin-top: 10px;"></div>
+            </div>
+
+            <div style="background: #020617; border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px;">
+              <h4 style="font-size: 12px; text-transform: uppercase; font-weight: 800; color: var(--primary); margin-bottom: 6px;">🕹️ Controls</h4>
+              <ul id="theaterControls" style="font-size: 12px; color: #94a3b8; font-family: var(--font-mono); list-style: none; display: flex; flex-direction: column; gap: 4px;"></ul>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid var(--border-subtle); padding-top: 12px;">
+            <div style="font-size: 11px; text-transform: uppercase; font-weight: 800; color: var(--text-dim); margin-bottom: 8px;">More Unblocked Games</div>
+            <div id="theaterRelated" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Tab Cloaker Modal -->
+    <div id="cloakModal" class="modal-overlay">
+      <div class="modal-box">
+        <div class="modal-header">
+          <div class="modal-title">🕶️ Tab Cloaker (Disguise)</div>
+          <button class="modal-close" onclick="closeModal('cloakModal')">✕</button>
+        </div>
+        <div class="modal-body">
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">
+            Camouflage this browser tab's title and favicon so it appears as a study or productivity tool:
+          </p>
+          <div id="cloakList"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-action" onclick="resetCloak()">Reset to Original</button>
+          <button class="btn-action btn-primary" onclick="closeModal('cloakModal')">Done</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panic Key Modal -->
+    <div id="panicModal" class="modal-overlay">
+      <div class="modal-box">
+        <div class="modal-header">
+          <div class="modal-title">🚨 Emergency Panic Boss Key</div>
+          <button class="modal-close" onclick="closeModal('panicModal')">✕</button>
+        </div>
+        <div class="modal-body">
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">
+            Pressing your panic trigger hotkey instantly leaves the portal and navigates to your chosen cover destination:
+          </p>
+          <div class="form-group">
+            <label class="form-label">Panic Trigger Key</label>
+            <input type="text" id="panicKeyInput" class="form-input" style="font-family: var(--font-mono); font-weight: bold; width: 100px; text-align: center;" maxlength="1" />
+            <small style="color: var(--text-dim); font-size: 11px;">Default is <code>]</code></small>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Safe Destination URL</label>
+            <input type="url" id="panicUrlInput" class="form-input" placeholder="https://classroom.google.com" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-action" onclick="testPanicRedirect()">Test Redirect</button>
+          <button class="btn-action btn-primary" onclick="savePanicConfig()">Save Keybind</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- games.json Manager Modal -->
+    <div id="jsonModal" class="modal-overlay">
+      <div class="modal-box modal-lg">
+        <div class="modal-header">
+          <div class="modal-title">📄 games.json Database Manager</div>
+          <button class="modal-close" onclick="closeModal('jsonModal')">✕</button>
+        </div>
+        <div class="modal-body">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-size: 12px; color: var(--text-muted);">Inspect or edit your games collection stored as iframes in JSON:</span>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-action" onclick="formatJson()">Format</button>
+              <button class="btn-action" onclick="downloadJsonFile()">Download games.json</button>
+            </div>
+          </div>
+          <textarea id="jsonEditor" class="form-textarea" style="min-height: 340px; font-size: 12px; line-height: 1.4;"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-action" style="color: #f87171; margin-right: auto;" onclick="resetCatalog()">Reset to Defaults</button>
+          <button class="btn-action" onclick="closeModal('jsonModal')">Cancel</button>
+          <button class="btn-action btn-primary" onclick="saveJsonChanges()">Save Changes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Custom Game Modal -->
+    <div id="addGameModal" class="modal-overlay">
+      <div class="modal-box">
+        <div class="modal-header">
+          <div class="modal-title">➕ Add Custom Iframe Game</div>
+          <button class="modal-close" onclick="closeModal('addGameModal')">✕</button>
+        </div>
+        <form onsubmit="submitAddGame(event)">
+          <div class="modal-body">
+            <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 10px;" class="form-group">
+              <div>
+                <label class="form-label">Game Title *</label>
+                <input type="text" id="addTitle" class="form-input" placeholder="e.g. Retro Racer" required />
+              </div>
+              <div>
+                <label class="form-label">Emoji Icon</label>
+                <input type="text" id="addEmoji" class="form-input" style="text-align: center;" value="🎮" maxlength="4" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select id="addCategory" class="form-select">
+                <option value="Arcade">Arcade</option>
+                <option value="Action">Action</option>
+                <option value="Puzzle">Puzzle</option>
+                <option value="Retro">Retro</option>
+                <option value="Sports">Sports</option>
+                <option value="Casual">Casual</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Iframe Game URL or &lt;iframe&gt; HTML *</label>
+              <textarea id="addIframe" class="form-textarea" placeholder="Paste URL (e.g. ./games/... or https://...) or <iframe> snippet" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <input type="text" id="addDesc" class="form-input" placeholder="Quick description of gameplay..." />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Key Controls (comma-separated)</label>
+              <input type="text" id="addControls" class="form-input" placeholder="Arrow Keys - Move, Space - Action" />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn-action" onclick="closeModal('addGameModal')">Cancel</button>
+            <button type="submit" class="btn-action btn-primary">Add to games.json</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Pure JavaScript Entry Point Script -->
+    <script type="module" src="./src/main.js"></script>
+
   </body>
 </html>
-
