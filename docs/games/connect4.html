@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connect Four</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: #090d16;
+      color: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 12px;
+    }
+    .game-card {
+      background: #1e293b;
+      border: 3px solid #334155;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .hud {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      align-items: center;
+    }
+    .turn-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .disc-indicator {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ef4444;
+    }
+    .btn-group {
+      display: flex;
+      gap: 8px;
+    }
+    .btn {
+      background: #0f172a;
+      color: #94a3b8;
+      border: 1px solid #334155;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn.active {
+      background: #3b82f6;
+      color: white;
+      border-color: #3b82f6;
+    }
+    .board {
+      background: #1d4ed8;
+      padding: 10px;
+      border-radius: 12px;
+      display: grid;
+      grid-template-columns: repeat(7, 46px);
+      grid-gap: 8px;
+      box-shadow: inset 0 4px 10px rgba(0,0,0,0.4);
+    }
+    .slot {
+      width: 46px;
+      height: 46px;
+      background: #0f172a;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .slot:hover {
+      box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.2);
+    }
+    .slot.p1 {
+      background: #ef4444;
+      box-shadow: inset 0 -3px 6px rgba(0,0,0,0.4);
+    }
+    .slot.p2 {
+      background: #facc15;
+      box-shadow: inset 0 -3px 6px rgba(0,0,0,0.4);
+    }
+    .slot.win {
+      animation: pulse 0.7s infinite alternate;
+      border: 3px solid #ffffff;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.1); }
+    }
+    .status-msg {
+      font-size: 15px;
+      font-weight: 800;
+      min-height: 22px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game-card">
+    <div class="hud">
+      <div class="turn-badge">
+        <div class="disc-indicator" id="turnDisc"></div>
+        <span id="turnText">Player 1's Turn (Red)</span>
+      </div>
+      <div class="btn-group">
+        <button class="btn active" id="btn1P" onclick="setMode('1p')">vs AI</button>
+        <button class="btn" id="btn2P" onclick="setMode('2p')">2P Local</button>
+        <button class="btn" onclick="initGame()">Reset</button>
+      </div>
+    </div>
+
+    <div class="board" id="board"></div>
+
+    <div class="status-msg" id="statusMsg">Click any column to drop your chip</div>
+  </div>
+
+  <script>
+    const ROWS = 6;
+    const COLS = 7;
+    let grid = [];
+    let currentPlayer = 1; // 1 = Red, 2 = Yellow
+    let isGameOver = false;
+    let mode = '1p'; // '1p' or '2p'
+
+    function setMode(newMode) {
+      mode = newMode;
+      document.getElementById('btn1P').classList.toggle('active', mode === '1p');
+      document.getElementById('btn2P').classList.toggle('active', mode === '2p');
+      initGame();
+    }
+
+    function initGame() {
+      grid = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+      currentPlayer = 1;
+      isGameOver = false;
+      updateTurnUI();
+      document.getElementById('statusMsg').innerText = 'Click any column to drop your chip';
+      render();
+    }
+
+    function updateTurnUI() {
+      const disc = document.getElementById('turnDisc');
+      const text = document.getElementById('turnText');
+      if (currentPlayer === 1) {
+        disc.style.background = '#ef4444';
+        text.innerText = "Player 1 (Red)";
+      } else {
+        disc.style.background = '#facc15';
+        text.innerText = mode === '1p' ? "Computer (Yellow)" : "Player 2 (Yellow)";
+      }
+    }
+
+    function render() {
+      const boardEl = document.getElementById('board');
+      boardEl.innerHTML = '';
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const slot = document.createElement('div');
+          slot.className = 'slot';
+          slot.dataset.col = c;
+          if (grid[r][c] === 1) slot.classList.add('p1');
+          if (grid[r][c] === 2) slot.classList.add('p2');
+          slot.addEventListener('click', () => handleColumnClick(c));
+          boardEl.appendChild(slot);
+        }
+      }
+    }
+
+    function handleColumnClick(col) {
+      if (isGameOver) return;
+      if (mode === '1p' && currentPlayer === 2) return;
+
+      if (dropPiece(col, currentPlayer)) {
+        if (checkWin(currentPlayer)) {
+          isGameOver = true;
+          document.getElementById('statusMsg').innerText = `🎉 ${currentPlayer === 1 ? 'Player 1 (Red)' : 'Player 2 (Yellow)'} Wins!`;
+          return;
+        }
+
+        if (checkDraw()) {
+          isGameOver = true;
+          document.getElementById('statusMsg').innerText = "Draw Game!";
+          return;
+        }
+
+        currentPlayer = currentPlayer === 1 ? 2 : 1;
+        updateTurnUI();
+
+        if (mode === '1p' && currentPlayer === 2 && !isGameOver) {
+          setTimeout(aiMove, 350);
+        }
+      }
+    }
+
+    function dropPiece(col, player) {
+      for (let r = ROWS - 1; r >= 0; r--) {
+        if (grid[r][col] === 0) {
+          grid[r][col] = player;
+          render();
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function aiMove() {
+      if (isGameOver) return;
+
+      // 1. Can AI win immediately?
+      for (let c = 0; c < COLS; c++) {
+        if (canPlay(c)) {
+          let r = getOpenRow(c);
+          grid[r][c] = 2;
+          if (isWinningMove(r, c, 2)) {
+            render();
+            isGameOver = true;
+            document.getElementById('statusMsg').innerText = '🤖 Computer Wins!';
+            return;
+          }
+          grid[r][c] = 0;
+        }
+      }
+
+      // 2. Can player win immediately? Block!
+      for (let c = 0; c < COLS; c++) {
+        if (canPlay(c)) {
+          let r = getOpenRow(c);
+          grid[r][c] = 1;
+          if (isWinningMove(r, c, 1)) {
+            grid[r][c] = 2; // block!
+            render();
+            checkAndPassAI(r, c);
+            return;
+          }
+          grid[r][c] = 0;
+        }
+      }
+
+      // 3. Prefer center column or valid random
+      const preferredCols = [3, 2, 4, 1, 5, 0, 6];
+      for (let c of preferredCols) {
+        if (canPlay(c)) {
+          let r = getOpenRow(c);
+          grid[r][c] = 2;
+          render();
+          checkAndPassAI(r, c);
+          return;
+        }
+      }
+    }
+
+    function checkAndPassAI(r, c) {
+      if (isWinningMove(r, c, 2)) {
+        isGameOver = true;
+        document.getElementById('statusMsg').innerText = '🤖 Computer Wins!';
+        return;
+      }
+      if (checkDraw()) {
+        isGameOver = true;
+        document.getElementById('statusMsg').innerText = 'Draw Game!';
+        return;
+      }
+      currentPlayer = 1;
+      updateTurnUI();
+    }
+
+    function canPlay(col) {
+      return grid[0][col] === 0;
+    }
+
+    function getOpenRow(col) {
+      for (let r = ROWS - 1; r >= 0; r--) {
+        if (grid[r][col] === 0) return r;
+      }
+      return -1;
+    }
+
+    function checkDraw() {
+      return grid[0].every(cell => cell !== 0);
+    }
+
+    function isWinningMove(r, c, player) {
+      // Horizontal
+      let count = 0;
+      for (let col = 0; col < COLS; col++) {
+        count = (grid[r][col] === player) ? count + 1 : 0;
+        if (count >= 4) return true;
+      }
+
+      // Vertical
+      count = 0;
+      for (let row = 0; row < ROWS; row++) {
+        count = (grid[row][c] === player) ? count + 1 : 0;
+        if (count >= 4) return true;
+      }
+
+      // Diagonals
+      for (let row = 0; row < ROWS - 3; row++) {
+        for (let col = 0; col < COLS - 3; col++) {
+          if (grid[row][col] === player && grid[row+1][col+1] === player &&
+              grid[row+2][col+2] === player && grid[row+3][col+3] === player) return true;
+        }
+      }
+      for (let row = 3; row < ROWS; row++) {
+        for (let col = 0; col < COLS - 3; col++) {
+          if (grid[row][col] === player && grid[row-1][col+1] === player &&
+              grid[row-2][col+2] === player && grid[row-3][col+3] === player) return true;
+        }
+      }
+      return false;
+    }
+
+    function checkWin(player) {
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          if (grid[r][c] === player && isWinningMove(r, c, player)) return true;
+        }
+      }
+      return false;
+    }
+
+    initGame();
+  </script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+[
+  {
+    "id": "snake",
+    "title": "Retro Snake",
+    "category": "Arcade",
+    "description": "The timeless arcade classic remastered in neon green. Slither around the grid, consume glowing power apples, and grow your tail while evading perimeter boundaries and self-collision.",
+    "iframeUrl": "./games/snake.html",
+    "embedHtml": "<iframe src=\"./games/snake.html\" width=\"100%\" height=\"600\" frameborder=\"0\" allow=\"fullscreen; autoplay\" allowfullscreen></iframe>",
+    "thumbnailEmoji": "🐍",
+    "accentColor": "emerald",
+    "controls": [
+      "Arrow Keys / WASD - Slither & Change Direction",
+      "Space - Pause / Resume Game"
+    ],
+    "tags": ["Arcade", "Retro", "Classic", "Highscore"],
+    "featured": true,
+    "rating": 4.9,
+    "plays": 24800
+  },
+  {
+    "id": "2048",
+    "title": "2048 Neon Edition",
+    "category": "Puzzle",
+    "description": "Slide matching numbers together to synthesize larger blocks. Plan tactical shifts and merge tiles systematically until you reach the elusive 2048 crown block.",
+    "iframeUrl": "./games/2048.html",
+    "embedHtml": "<iframe src=\"./games/2048.html\" width=\"100%\" height=\"600\" frameborder=\"0\" allow=\"fullscreen\" allowfullscreen></iframe>",
+    "thumbnailEmoji": "🔢",
+    "accentColor": "amber",
+    "controls": [
+      "Arrow Keys / WASD - Slide Grid Tiles",
+      "Touch Screen - Swipe to Shift Numbers",
+      "Undo Button - Revert Previous Shift"
+    ],
+    "tags": ["Puzzle", "Math", "Brain", "Strategy"],
+    "featured": true,
+    "rating": 4.8,
+    "plays": 19450
+  },
+  {
+    "id": "tetris",
+    "title": "Block Drop (Tetris)",
+    "category": "Retro",
+    "description": "Drop, rotate, and pack seven geometric tetromino formations into complete rows. Clear multiple lines simultaneously for score multipliers and level up your drop speed.",
+    "iframeUrl": "./games/tetris.html",
+    "embedHtml": "<iframe src=\"./games/tetris.html\" width=\"100%\" height=\"600\" frameborder=\"0\" allow=\"fullscreen\" allowfullscreen></iframe>",
+    "thumbnailEmoji": "🧱",
+    "accentColor": "indigo",
+    "controls": [
+      "Left / Right Arrow - Move Block",
+      "Up Arrow / W - Rotate Orientation",
+      "Down Arrow - Soft Drop",
+      "Spacebar - Instant Hard Drop",
+      "P - Toggle Pause"
+    ],
+    "tags": ["Retro", "Arcade", "Blocks", "Classic"],
+    "featured": true,
+    "rating": 4.9,
+    "plays": 31200
+  },
+  {
+    "id": "flappy",
+    "title": "Neon Flappy Bird",
+    "category": "Arcade",
+    "description": "Tap your wings against gravity and weave through dense electrical conduits. Precision timing and micro-adjustments are critical to set world-class high scores.",
+    "iframeUrl": "./games/flappy.html",
+    "embedHtml": "<iframe src=\"./games/flappy.html\" width=\"100%\" height=\"600\" frameborder=\"0\" allow=\"fullscreen; autoplay\" allowfullscreen></iframe>",
+    "thumbnailEmoji": "🐥",
+    "accentColor": "sky",
+    "controls": [
+      "Spacebar / Click / Screen Tap - Flap Wings"
+    ],
+    "tags": ["Arcade", "Endless", "Reflex", "Physics"],
+    "featured": true,
+    "rating": 4.7,
+    "plays": 17890
+  },
+  {
+    "id": "pong",
+    "title": "Cyber Neon Pong",
+    "category": "Sports",
+    "description": "High-octane neon cyber table tennis. Compete against an adaptive computer opponent or grab a friend on the same keyboard for intense 2-player split rallies.",
+    "iframeUrl": "./games/pong.html",
+    "embedHtml": "<iframe src=\"./games/pong.html\" width=\"100%\" height=\"600\" frameborder=\"0\" allow=\"fullscreen; autoplay\" allowfullscreen></iframe>",
+    "thumbnailEmoji": "🏓",
+    "accentColor": "violet",
+    "controls": [
+      "Player 1: W (Up) / S (Down)",
+      "Player 2: Up Arrow / Down Arrow",
+      "First player to 7 points secures victory"
+    ],
+    "tags": ["Sports", "2-Player", "Arcade", "Retro"],
+    "featured": false,
+    "rating": 4.8,
+    "plays": 14200
+  },
+  {
+    "id": "breakout",
+    "title": "Neon Brick Breaker",
+    "category": "Arcade",
+    "description": "Pilot your energy paddle to rebound ballistic plasma spheres against multilayered brick walls. Angle each deflection carefully to shatter the entire perimeter.",
+    "iframeUrl": "./games/breakout.html",
+    "embedHtml": "<iframe src=\"./games/breakout.html\" width=\"100%\" height=\"600\" frameborder=\"0\" allow=\"fullscreen; autoplay\" allowfullscreen></iframe>",
+    "thumbnailEmoji": "⚡",
+    "accentColor": "cyan",
+    "controls": [
+      "Mouse Cursor / Touch Drag - Steer Paddle",
+      "Left & Right Arrow Keys - Keyboard Paddle Controls"
+    ],
+    "tags": ["Arcade", "Breakout", "Action", "Classic"],
+    "featured": false,
+    "rating": 4.8,
+    "plays": 16400
+  },
+  {
+    "id": "space-invaders",
+    "title": "Space Defender 1982",
+    "category": "Action",
+    "description": "Defend humanity's frontier against relentless alien mothership squadrons. Dodge incoming plasma shells, time your laser bursts, and intercept mystery flagships.",
+    "iframeUrl": "./games/space-invaders.html",
+    "embedHtml": "<iframe src=\"./games/space-invaders.html\" width=\"100%\" height=\"600\" frameborder=\"0\" allow=\"fullscreen; autoplay\" allowfullscreen></iframe>",
+    "thumbnailEmoji": "👾",
+    "accentColor": "purple",
+    "controls": [
+      "Left & Right Arrow / A & D - Steer Starship",
+      "Spacebar - Fire Plasma Cannons"
+    ],
+    "tags": ["Action", "Shooter", "Retro", "Space"],
+    "featured": true,
+    "rating": 4.9,
+    "plays": 22100
+  },
+  {
+    "id": "dino",
+    "title": "T-Rex Desert Runner",
+    "category": "Action",
+    "description": "The beloved offline desert survival sprint upgraded with smooth neon night modes. Leap over prickly saguaro cacti and duck underneath swooping pterodactyls.",
+    "iframeUrl": "./games/dino.html",
+    "embedHtml": "<iframe src=\"./games/dino.html\" width=\"100%\" height=\"600\" frameborder=\"0\" allow=\"fullscreen; autoplay\" allowfullscreen></iframe>",
+    "thumbnailEmoji": "🦖",
+    "accentColor": "orange",
+    "controls": [
+      "Spacebar / Up Arrow / Screen Tap - Jump",
+      "Down Arrow - Crouch & Fast Dive"
+    ],
+    "tags": ["Action", "Endless", "Runner", "Offline"],
+    "featured": false,
+    "rating": 4.7,
+    "plays": 28900
+  },
+  {
+    "id": "racing",
+    "title": "Turbo Highway Racer",
+    "category": "Action",
+    "description": "High-speed lane-switching racing simulator. Weave through heavy commuter rush hour traffic, test your reflexes, and monitor your speedometer at 140+ MPH.",
+    "iframeUrl": "./games/retro-racing.html",
+    "embedHtml": "<iframe src=\"./games/retro-racing.html\" width=\"100%\" height=\"600\" frameborder=\"0\" allow=\"fullscreen; autoplay\" allowfullscreen></iframe>",
+    "thumbnailEmoji": "🏎️",
+    "accentColor": "rose",
+    "controls": [
+      "Left & Right Arrow / A & D - Switch Lanes",
+      "Up Arrow / W - Accelerate Throttle",
+      "Down Arrow / S - Apply Brakes"
+    ],
+    "tags": ["Action", "Racing", "Cars", "Speed"],
+    "featured": false,
+    "rating": 4.8,
+    "plays": 18300
+  },
+  {
+    "id": "minesweeper",
+    "title": "Retro Minesweeper",
+    "category": "Puzzle",
+    "description": "Strategic grid reconnaissance. Use numerical adjacency clues to deduce where explosive landmines are buried while flagging hazardous sectors.",
+    "iframeUrl": "./games/minesweeper.html",
+    "embedHtml": "<iframe src=\"./games/minesweeper.html\" width=\"100%\" height=\"600\" frameborder=\"0\" allow=\"fullscreen\" allowfullscreen></iframe>",
+    "thumbnailEmoji": "💣",
+    "accentColor": "slate",
+    "controls": [
+      "Left Click - Reveal Sector / Dig",
+      "Right Click - Plant Caution Flag",
+      "Smiley Icon - Reset Field"
+    ],
+    "tags": ["Puzzle", "Logic", "Strategy", "Classic"],
+    "featured": false,
+    "rating": 4.7,
+    "plays": 12700
+  },
+  {
+    "id": "connect4",
+    "title": "Connect Four Tactical",
+    "category": "Puzzle",
+    "description": "Drop colored counters into a vertical seven-column grid. Outsmart the heuristic computer algorithm or a friend by lining up four matching discs before your opponent.",
+    "iframeUrl": "./games/connect4.html",
+    "embedHtml": "<iframe src=\"./games/connect4.html\" width=\"100%\" height=\"600\" frameborder=\"0\" allow=\"fullscreen\" allowfullscreen></iframe>",
+    "thumbnailEmoji": "🔴",
+    "accentColor": "blue",
+    "controls": [
+      "Click Column - Drop Player Disc",
+      "Toggle Mode - Switch between vs Computer or 2-Player Local"
+    ],
+    "tags": ["Puzzle", "Board Game", "2-Player", "Strategy"],
+    "featured": false,
+    "rating": 4.8,
+    "plays": 15100
+  }
+]

@@ -64,6 +64,13 @@ export const GameTheaterModal = ({
     .filter((g) => g.id !== game.id && (g.category === game.category || g.featured))
     .slice(0, 4);
 
+  const resolvedUrl = React.useMemo(() => {
+    const url = game?.iframeUrl || '';
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    if (url.startsWith('/games/')) return '.' + url;
+    return url;
+  }, [game?.iframeUrl]);
+
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-start overflow-y-auto p-2 sm:p-4 md:p-6 animate-in fade-in duration-200">
       
@@ -148,7 +155,7 @@ export const GameTheaterModal = ({
 
             {/* Open Direct Game Link */}
             <a
-              href={game.iframeUrl}
+              href={resolvedUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors hidden md:flex"
@@ -186,7 +193,7 @@ export const GameTheaterModal = ({
           <iframe
             key={iframeKey}
             ref={iframeRef}
-            src={game.iframeUrl}
+            src={resolvedUrl}
             title={game.title}
             className="w-full h-full border-0"
             allow="fullscreen; autoplay; gamepad; keyboard"
