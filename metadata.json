@@ -1,0 +1,6 @@
+{
+  "name": "Nexus Unblocked - HTML5 Games Hub",
+  "description": "Fast and lightweight unblocked HTML5 games collection loaded via iframe JSON configurations with tab disguise and theater mode.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
